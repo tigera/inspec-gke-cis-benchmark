@@ -29,7 +29,7 @@ inputs:
 - name: gcp_project_id
   description: 'The GCP project identifier.'
   type: string
-  value: "replace_with_your_gcp_project_id"
+  value: "tigera-tesla"
 - name: cis_version
   description: 'The short version of the GKE CIS Benchmark'
   value: '1.1'
@@ -42,33 +42,30 @@ inputs:
   description: 'The list of regions and/or zone names where GKE clusters are running. An empty array searches all locations'
   type: array
   value:
-    - ""
+    - ["us-central1"]
 - name: gce_zones
   description: 'The list of zone names where GCE instances are running. An empty array searches all locations'
   type: array
   value:
-    - ""
+    - ["us-central1"]
 - name: registry_storage_admin_list
   description: 'The allowed list of Storage Admins on Registry image bucket'
   type: array
   value:
-    - ""
-#   - "serviceAccount:test1@myproject.iam.gserviceaccount.com"
-#   - "serviceAccount:test2@myproject.iam.gserviceaccount.com"
+    - "serviceAccount:registry-write@tigera-tesla.iam.gserviceaccount.com"
+    - "serviceAccount:registry-writer@tigera-tesla.iam.gserviceaccount.com"
 - name: registry_storage_object_admin_list
   description: 'The allowed list of Storage Object Admins on Registry image bucket'
   type: array
   value:
-    - ""
-#   - "serviceAccount:test1@myproject.iam.gserviceaccount.com"
-#   - "serviceAccount:test2@myproject.iam.gserviceaccount.com"
+    - "serviceAccount:registry-write@tigera-tesla.iam.gserviceaccount.com"
+    - "serviceAccount:registry-writer@tigera-tesla.iam.gserviceaccount.com"
 - name: registry_storage_object_creator_list
   description: 'The allowed list of Storage Object Creators on Registry image bucket'
   type: array
   value:
-    - ""
-#   - "serviceAccount:test1@myproject.iam.gserviceaccount.com"
-#   - "serviceAccount:test2@myproject.iam.gserviceaccount.com"
+    - "serviceAccount:registry-write@tigera-tesla.iam.gserviceaccount.com"
+    - "serviceAccount:registry-writer@tigera-tesla.iam.gserviceaccount.com"
 - name: registry_storage_legacy_bucket_owner_list
   description: 'The allowed list of Storage Legacy Bucket Owners on Registry image bucket'
   type: array
