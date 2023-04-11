@@ -19,6 +19,51 @@ A wrapper script `run_profiles.sh` is provided in the root directory of the repo
 * Configure access via the [Identity-Aware Proxy (IAP)](https://cloud.google.com/iap/docs/enabling-kubernetes-howto) to cluster nodes for the inspec-gke-cis-ssh profile to run successfully
 * Follow the setup steps for inspec-k8s as explained [here](https://github.com/bgeesaman/train-kubernetes#installation)
 
+### Run for tigera-telsa (based on CLI Example below)
+Open a Cloud Shell in GCP for the project.
+
+```
+# install inspec (later version might work but not tested)
+$ gem install inspec-bin -v 4.41.2 --no-document --quiet
+
+# clone the Git Repo
+$ git clone https://github.com/tigera/inspec-gke-cis-benchmark.git
+$ git checkout tigera-tesla
+$ cd inspec-gke-cis-benchmark
+
+# Check the input file is correct:
+$ cat inputs.yml
+
+# Connect to GKE Cluster (getting credentials in ~/.kubeconfig, validate using kubectl)
+$ ./get_cluster_creds.sh
+
+# install inspec-k8s and relevant gems (needs to run in directory of Gemfile)
+# (refer to the inspec-k8s docs for details and troubleshooting)
+$ bundle install
+
+# install InSpec plugin train-kubernetes
+$ inspec plugin install train-kubernetes
+
+# (skip this) Add the host you are running from to the master-authorized-networks to allow access to Private K8S Clusters
+$ gcloud container clusters update <cluster name> \
+  --zone <zone> \
+  --enable-master-authorized-networks \
+  --master-authorized-networks <your host's IP address>/32
+
+---
+
+# make sure you're authenticated to GCP
+$ gcloud auth list
+
+# (skip if authed) acquire credentials to use with Application Default Credentials
+$ gcloud auth application-default login
+
+---
+
+# Run
+$ ./exec_inspect.sh
+```
+
 ### CLI Example (Cloud Shell)
 
 ```
@@ -26,7 +71,7 @@ A wrapper script `run_profiles.sh` is provided in the root directory of the repo
 $ gem install inspec-bin -v 4.41.2 --no-document --quiet
 
 # clone the Git Repo
-$ git clone https://github.com/GoogleCloudPlatform/inspec-gke-cis-benchmark.git
+$ git clone https://github.com/tigera/inspec-gke-cis-benchmark.git
 $ cd inspec-gke-cis-benchmark
 
 # Write an inputs file, see basic example below
