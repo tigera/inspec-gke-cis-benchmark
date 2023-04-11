@@ -28,8 +28,8 @@ $ gem install inspec-bin -v 4.41.2 --no-document --quiet
 
 # clone the Git Repo
 $ git clone https://github.com/tigera/inspec-gke-cis-benchmark.git
-$ git checkout tigera-tesla
 $ cd inspec-gke-cis-benchmark
+$ git checkout tigera-tesla
 
 # Check the input file is correct:
 $ cat inputs.yml
@@ -61,7 +61,7 @@ $ gcloud auth application-default login
 ---
 
 # Run
-$ ./exec_inspect.sh
+$ ./exec_inspec.sh
 ```
 
 ### CLI Example (Cloud Shell)
