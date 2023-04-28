@@ -54,8 +54,6 @@ inputs:
   value:
     - "projectEditor:tigera-tesla"
     - "projectOwner:tigera-tesla"
-    - "serviceAccount:registry-write@tigera-tesla.iam.gserviceaccount.com"
-    - "serviceAccount:registry-writer@tigera-tesla.iam.gserviceaccount.com"
 - name: registry_storage_object_admin_list
   description: 'The allowed list of Storage Object Admins on Registry image bucket'
   type: array
