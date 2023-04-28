@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>RSpec results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-size: 80%;
+  }
+  </style>
+  <script type="text/javascript">
+    // <![CDATA[
+
+function addClass(element_id, classname) {
+  document.getElementById(element_id).className += (" " + classname);
+}
+
+function removeClass(element_id, classname) {
+  var elem = document.getElementById(element_id);
+  var classlist = elem.className.replace(classname,'');
+  elem.className = classlist;
+}
+
+function moveProgressBar(percentDone) {
+  document.getElementById("rspec-header").style.width = percentDone +"%";
+}
+
+function makeRed(element_id) {
+  removeClass(element_id, 'passed');
+  removeClass(element_id, 'not_implemented');
+  addClass(element_id,'failed');
+}
+
+function makeYellow(element_id) {
+  var elem = document.getElementById(element_id);
+  if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+    if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+      removeClass(element_id, 'passed');
+      addClass(element_id,'not_implemented');
+    }
+  }
+}
+
+function apply_filters() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+
+  assign_display_style("example passed", passed_filter);
+  assign_display_style("example failed", failed_filter);
+  assign_display_style("example not_implemented", pending_filter);
+
+  assign_display_style_for_group("example_group passed", passed_filter);
+  assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
+  assign_display_style_for_group("example_group failed", failed_filter, failed_filter || pending_filter || passed_filter);
+}
+
+function get_display_style(display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  return style_mode;
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = get_display_style(display_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style_for_group(classname, display_flag, subgroup_flag) {
+  var display_style_mode = get_display_style(display_flag);
+  var subgroup_style_mode = get_display_style(subgroup_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    var style_mode = display_style_mode;
+    if ((display_flag != subgroup_flag) && (elems[i].getElementsByTagName('dt')[0].innerHTML.indexOf(", ") != -1)) {
+      elems[i].style.display = subgroup_style_mode;
+    } else {
+      elems[i].style.display = display_style_mode;
+    }
+  }
+}
+
+    // ]]>
+  </script>
+  <style type="text/css">
+#rspec-header {
+  background: #65C400; color: #fff; height: 4em;
+}
+
+.rspec-report h1 {
+  margin: 0px 10px 0px 10px;
+  padding: 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  font-size: 1.8em;
+  position: absolute;
+}
+
+#label {
+  float:left;
+}
+
+#display-filters {
+  float:left;
+  padding: 28px 0 0 40%;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+}
+
+#summary {
+  float:right;
+  padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
+}
+
+#summary p {
+  margin: 0 0 0 2px;
+}
+
+#summary #totals {
+  font-size: 1.2em;
+}
+
+.example_group {
+  margin: 0 10px 5px;
+  background: #fff;
+}
+
+dl {
+  margin: 0; padding: 0 0 5px;
+  font: normal 11px "Lucida Grande", Helvetica, sans-serif;
+}
+
+dt {
+  padding: 3px;
+  background: #65C400;
+  color: #fff;
+  font-weight: bold;
+}
+
+dd {
+  margin: 5px 0 5px 5px;
+  padding: 3px 3px 3px 18px;
+}
+
+dd .duration {
+  padding-left: 5px;
+  text-align: right;
+  right: 0px;
+  float:right;
+}
+
+dd.example.passed {
+  border-left: 5px solid #65C400;
+  border-bottom: 1px solid #65C400;
+  background: #DBFFB4; color: #3D7700;
+}
+
+dd.example.not_implemented {
+  border-left: 5px solid #FAF834;
+  border-bottom: 1px solid #FAF834;
+  background: #FCFB98; color: #131313;
+}
+
+dd.example.pending_fixed {
+  border-left: 5px solid #0000C2;
+  border-bottom: 1px solid #0000C2;
+  color: #0000C2; background: #D3FBFF;
+}
+
+dd.example.failed {
+  border-left: 5px solid #C20000;
+  border-bottom: 1px solid #C20000;
+  color: #C20000; background: #FFFBD3;
+}
+
+
+dt.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+dt.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+dt.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+#rspec-header.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+#rspec-header.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+#rspec-header.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+.backtrace {
+  color: #000;
+  font-size: 12px;
+}
+
+a {
+  color: #BE5C00;
+}
+
+/* Ruby code, style similar to vibrant ink */
+.ruby {
+  font-size: 12px;
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.1em 0 0.2em 0;
+}
+
+.ruby .keyword { color: #FF6600; }
+.ruby .constant { color: #339999; }
+.ruby .attribute { color: white; }
+.ruby .global { color: white; }
+.ruby .module { color: white; }
+.ruby .class { color: white; }
+.ruby .string { color: #66FF00; }
+.ruby .ident { color: white; }
+.ruby .method { color: #FFCC00; }
+.ruby .number { color: white; }
+.ruby .char { color: white; }
+.ruby .comment { color: #9933CC; }
+.ruby .symbol { color: white; }
+.ruby .regex { color: #44B4CC; }
+.ruby .punct { color: white; }
+.ruby .escape { color: white; }
+.ruby .interp { color: white; }
+.ruby .expr { color: white; }
+
+.ruby .offending { background-color: gray; }
+.ruby .linenum {
+  width: 75px;
+  padding: 0.1em 1em 0.2em 0;
+  color: #000000;
+  background-color: #FFFBD3;
+}
+
+  </style>
+</head>
+<body>
+<div class="rspec-report">
+
+<div id="rspec-header">
+  <div id="label">
+    <h1>RSpec Code Examples</h1>
+  </div>
+
+  <div id="display-filters">
+    <input id="passed_checkbox"  name="passed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="1" /> <label for="passed_checkbox">Passed</label>
+    <input id="failed_checkbox"  name="failed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="2" /> <label for="failed_checkbox">Failed</label>
+    <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="apply_filters()" value="3" /> <label for="pending_checkbox">Pending</label>
+  </div>
+
+  <div id="summary">
+    <p id="totals">&#160;</p>
+    <p id="duration">&#160;</p>
+  </div>
+</div>
+
+
+<div class="results">
+<div id="div_group_1" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_1" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+    <script type="text/javascript">moveProgressBar('1.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should have legacy endpoints disabled.</span><span class='duration'>0.00032s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+    <script type="text/javascript">moveProgressBar('3.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should have legacy endpoints disabled.</span><span class='duration'>0.00015s</span></dd>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_3" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_4" class="passed">config.workload_meta_config.mode</dt>
+    <script type="text/javascript">makeRed('rspec-header');</script>
+    <script type="text/javascript">makeRed('div_group_4');</script>
+    <script type="text/javascript">makeRed('example_group_4');</script>
+    <script type="text/javascript">moveProgressBar('4.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to be in &quot;GCE_METADATA&quot; and &quot;GKE_METADATA&quot;</span>
+      <span class="duration">0.24182s</span>
+      <div class="failure" id="failure_1">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected `` to be in the list: `[&quot;GCE_METADATA&quot;, &quot;GKE_METADATA&quot;]`
+  # inspec-gke-cis-gcp/controls/5.04-node-metadata.rb:108:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.04-node-metadata.rb:108:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">106</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="content">, Node Pool: </span><span class="inline"><span class="inline-delimiter">#{</span>nodepoolname<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">107</span>          <span class="keyword">subject</span> { google_container_node_pool(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">cluster_name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">nodepool_name</span>: nodepoolname) }
+<span class="offending"><span class="linenum">108</span>          its(<span class="string"><span class="delimiter">'</span><span class="content">config.workload_meta_config.mode</span><span class="delimiter">'</span></span>) { should be_in <span class="string"><span class="delimiter">%w[</span><span class="content">GCE_METADATA GKE_METADATA</span><span class="delimiter">]</span></span> }</span>
+<span class="linenum">109</span>        <span class="keyword">end</span>
+<span class="linenum">110</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_5" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_6" class="passed">config.workload_meta_config.mode</dt>
+    <script type="text/javascript">makeRed('div_group_6');</script>
+    <script type="text/javascript">makeRed('example_group_6');</script>
+    <script type="text/javascript">moveProgressBar('6.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to be in &quot;GCE_METADATA&quot; and &quot;GKE_METADATA&quot;</span>
+      <span class="duration">0.22256s</span>
+      <div class="failure" id="failure_2">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected `` to be in the list: `[&quot;GCE_METADATA&quot;, &quot;GKE_METADATA&quot;]`
+  # inspec-gke-cis-gcp/controls/5.04-node-metadata.rb:108:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.04-node-metadata.rb:108:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">106</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="content">, Node Pool: </span><span class="inline"><span class="inline-delimiter">#{</span>nodepoolname<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">107</span>          <span class="keyword">subject</span> { google_container_node_pool(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">cluster_name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">nodepool_name</span>: nodepoolname) }
+<span class="offending"><span class="linenum">108</span>          its(<span class="string"><span class="delimiter">'</span><span class="content">config.workload_meta_config.mode</span><span class="delimiter">'</span></span>) { should be_in <span class="string"><span class="delimiter">%w[</span><span class="content">GCE_METADATA GKE_METADATA</span><span class="delimiter">]</span></span> }</span>
+<span class="linenum">109</span>        <span class="keyword">end</span>
+<span class="linenum">110</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_7" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_8" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_8" class="passed">addons_config.kubernetes_dashboard.disabled</dt>
+    <script type="text/javascript">moveProgressBar('7.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.24801s</span></dd>
+  </dl>
+</div>
+<div id="div_group_9" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_9" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_10" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_10" class="passed">addons_config.kubernetes_dashboard.disabled</dt>
+    <script type="text/javascript">moveProgressBar('9.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.25882s</span></dd>
+  </dl>
+</div>
+<div id="div_group_11" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_11" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_12" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_12" class="passed">enable_kubernetes_alpha</dt>
+    <script type="text/javascript">moveProgressBar('10.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq nil</span><span class='duration'>0.25434s</span></dd>
+  </dl>
+</div>
+<div id="div_group_13" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_13" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_14" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_14" class="passed">enable_kubernetes_alpha</dt>
+    <script type="text/javascript">moveProgressBar('12.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq nil</span><span class='duration'>0.23118s</span></dd>
+  </dl>
+</div>
+<div id="div_group_15" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_15" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_16" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_16" class="passed">pod_security_policy_config.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_16');</script>
+    <script type="text/javascript">makeRed('example_group_16');</script>
+    <script type="text/javascript">moveProgressBar('14.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.26190s</span>
+      <div class="failure" id="failure_3">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.10-other.rb:123:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.10-other.rb:123:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">121</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">beta</span>: <span class="predefined-constant">true</span>) }
+<span class="linenum">122</span>        <span class="comment"># TODO: Inspec-GCP support</span>
+<span class="offending"><span class="linenum">123</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">pod_security_policy_config.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">124</span>      <span class="keyword">end</span>
+<span class="linenum">125</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_17" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_17" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_18" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_18" class="passed">pod_security_policy_config.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_18');</script>
+    <script type="text/javascript">makeRed('example_group_18');</script>
+    <script type="text/javascript">moveProgressBar('15.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.25608s</span>
+      <div class="failure" id="failure_4">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.10-other.rb:123:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.10-other.rb:123:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">121</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">beta</span>: <span class="predefined-constant">true</span>) }
+<span class="linenum">122</span>        <span class="comment"># TODO: Inspec-GCP support</span>
+<span class="offending"><span class="linenum">123</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">pod_security_policy_config.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">124</span>      <span class="keyword">end</span>
+<span class="linenum">125</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_19" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_19" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_20" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_20" class="passed">binary_authorization.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_20');</script>
+    <script type="text/javascript">makeRed('example_group_20');</script>
+    <script type="text/javascript">moveProgressBar('17.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.42352s</span>
+      <div class="failure" id="failure_5">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.10-other.rb:151:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.10-other.rb:151:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">149</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">150</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">151</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">binary_authorization.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">152</span>      <span class="keyword">end</span>
+<span class="linenum">153</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_21" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_21" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_22" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_22" class="passed">binary_authorization.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_22');</script>
+    <script type="text/javascript">makeRed('example_group_22');</script>
+    <script type="text/javascript">moveProgressBar('18.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.23729s</span>
+      <div class="failure" id="failure_6">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.10-other.rb:151:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.10-other.rb:151:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">149</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">150</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">151</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">binary_authorization.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">152</span>      <span class="keyword">end</span>
+<span class="linenum">153</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_23" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_23" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_24" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_24" class="passed">logging_service</dt>
+    <script type="text/javascript">makeRed('div_group_24');</script>
+    <script type="text/javascript">makeRed('example_group_24');</script>
+    <script type="text/javascript">moveProgressBar('20.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /^logging.googleapis.com/</span>
+      <span class="duration">0.24556s</span>
+      <div class="failure" id="failure_7">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected &quot;none&quot; to match /^logging.googleapis.com/
+    Diff:
+    @@ -1 +1 @@
+    -/^logging.googleapis.com/
+    +&quot;none&quot;
+  # inspec-gke-cis-gcp/controls/5.07-logging.rb:67:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.07-logging.rb:67:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">65</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">logging_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^logging.googleapis.com</span><span class="delimiter">/</span></span>) }</span>
+<span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">monitoring_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^monitoring.googleapis.com</span><span class="delimiter">/</span></span>) }
+<span class="linenum">69</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_25" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_25" class="passed">monitoring_service</dt>
+    <script type="text/javascript">makeRed('div_group_25');</script>
+    <script type="text/javascript">makeRed('example_group_25');</script>
+    <script type="text/javascript">moveProgressBar('21.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /^monitoring.googleapis.com/</span>
+      <span class="duration">0.21037s</span>
+      <div class="failure" id="failure_8">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected &quot;none&quot; to match /^monitoring.googleapis.com/
+    Diff:
+    @@ -1 +1 @@
+    -/^monitoring.googleapis.com/
+    +&quot;none&quot;
+  # inspec-gke-cis-gcp/controls/5.07-logging.rb:68:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.07-logging.rb:68:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">logging_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^logging.googleapis.com</span><span class="delimiter">/</span></span>) }
+<span class="offending"><span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">monitoring_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^monitoring.googleapis.com</span><span class="delimiter">/</span></span>) }</span>
+<span class="linenum">69</span>      <span class="keyword">end</span>
+<span class="linenum">70</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_26" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_26" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_27" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_27" class="passed">logging_service</dt>
+    <script type="text/javascript">makeRed('div_group_27');</script>
+    <script type="text/javascript">makeRed('example_group_27');</script>
+    <script type="text/javascript">moveProgressBar('23.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /^logging.googleapis.com/</span>
+      <span class="duration">0.24919s</span>
+      <div class="failure" id="failure_9">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected &quot;none&quot; to match /^logging.googleapis.com/
+    Diff:
+    @@ -1 +1 @@
+    -/^logging.googleapis.com/
+    +&quot;none&quot;
+  # inspec-gke-cis-gcp/controls/5.07-logging.rb:67:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.07-logging.rb:67:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">65</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">logging_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^logging.googleapis.com</span><span class="delimiter">/</span></span>) }</span>
+<span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">monitoring_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^monitoring.googleapis.com</span><span class="delimiter">/</span></span>) }
+<span class="linenum">69</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_28" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_28" class="passed">monitoring_service</dt>
+    <script type="text/javascript">makeRed('div_group_28');</script>
+    <script type="text/javascript">makeRed('example_group_28');</script>
+    <script type="text/javascript">moveProgressBar('25.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /^monitoring.googleapis.com/</span>
+      <span class="duration">0.24813s</span>
+      <div class="failure" id="failure_10">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected &quot;none&quot; to match /^monitoring.googleapis.com/
+    Diff:
+    @@ -1 +1 @@
+    -/^monitoring.googleapis.com/
+    +&quot;none&quot;
+  # inspec-gke-cis-gcp/controls/5.07-logging.rb:68:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.07-logging.rb:68:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">logging_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^logging.googleapis.com</span><span class="delimiter">/</span></span>) }
+<span class="offending"><span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">monitoring_service</span><span class="delimiter">'</span></span>) { should match(<span class="regexp"><span class="delimiter">/</span><span class="content">^monitoring.googleapis.com</span><span class="delimiter">/</span></span>) }</span>
+<span class="linenum">69</span>      <span class="keyword">end</span>
+<span class="linenum">70</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_29" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_29" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_30" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_30" class="passed">ip_allocation_policy.use_ip_aliases</dt>
+    <script type="text/javascript">moveProgressBar('26.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.25112s</span></dd>
+  </dl>
+</div>
+<div id="div_group_31" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_31" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_32" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_32" class="passed">ip_allocation_policy.use_ip_aliases</dt>
+    <script type="text/javascript">moveProgressBar('28.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.27603s</span></dd>
+  </dl>
+</div>
+<div id="div_group_33" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_33" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_34" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_34" class="passed">master_authorized_networks_config.cidr_blocks</dt>
+    <script type="text/javascript">moveProgressBar('29.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be empty</span><span class='duration'>0.27810s</span></dd>
+  </dl>
+</div>
+<div id="div_group_35" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_35" class="passed">master_authorized_networks_config.cidr_blocks.to_s</dt>
+    <script type="text/javascript">moveProgressBar('31.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to match /0.0.0.0\/0/</span><span class='duration'>0.21532s</span></dd>
+  </dl>
+</div>
+<div id="div_group_36" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_36" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_37" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_37" class="passed">master_authorized_networks_config.cidr_blocks</dt>
+    <script type="text/javascript">makeRed('div_group_37');</script>
+    <script type="text/javascript">makeRed('example_group_37');</script>
+    <script type="text/javascript">moveProgressBar('32.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to be empty</span>
+      <span class="duration">0.25058s</span>
+      <div class="failure" id="failure_11">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected nil to respond to `empty?`
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:129:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:129:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">127</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">128</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">129</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">master_authorized_networks_config.cidr_blocks</span><span class="delimiter">'</span></span>) { should_not be_empty }</span>
+<span class="linenum">130</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">master_authorized_networks_config.cidr_blocks.to_s</span><span class="delimiter">'</span></span>) { should_not match <span class="regexp"><span class="delimiter">%r{</span><span class="content">0.0.0.0/0</span><span class="delimiter">}</span></span> }
+<span class="linenum">131</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_38" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_38" class="passed">master_authorized_networks_config.cidr_blocks.to_s</dt>
+    <script type="text/javascript">moveProgressBar('34.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to match /0.0.0.0\/0/</span><span class='duration'>0.26638s</span></dd>
+  </dl>
+</div>
+<div id="div_group_39" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_39" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_40" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_40" class="passed">private_cluster_config.enable_private_endpoint</dt>
+    <script type="text/javascript">makeRed('div_group_40');</script>
+    <script type="text/javascript">makeRed('example_group_40');</script>
+    <script type="text/javascript">moveProgressBar('35.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.24338s</span>
+      <div class="failure" id="failure_12">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:159:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:159:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">157</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">158</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">159</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">private_cluster_config.enable_private_endpoint</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">160</span>      <span class="keyword">end</span>
+<span class="linenum">161</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_41" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_41" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_42" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_42" class="passed">private_cluster_config.enable_private_endpoint</dt>
+    <script type="text/javascript">makeRed('div_group_42');</script>
+    <script type="text/javascript">makeRed('example_group_42');</script>
+    <script type="text/javascript">moveProgressBar('37.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.26726s</span>
+      <div class="failure" id="failure_13">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:159:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:159:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">157</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">158</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">159</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">private_cluster_config.enable_private_endpoint</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">160</span>      <span class="keyword">end</span>
+<span class="linenum">161</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_43" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_43" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_44" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_44" class="passed">private_cluster_config.enable_private_nodes</dt>
+    <script type="text/javascript">makeRed('div_group_44');</script>
+    <script type="text/javascript">makeRed('example_group_44');</script>
+    <script type="text/javascript">moveProgressBar('39.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.23674s</span>
+      <div class="failure" id="failure_14">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:186:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:186:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">184</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">185</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">186</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">private_cluster_config.enable_private_nodes</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">187</span>      <span class="keyword">end</span>
+<span class="linenum">188</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_45" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_45" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_46" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_46" class="passed">private_cluster_config.enable_private_nodes</dt>
+    <script type="text/javascript">makeRed('div_group_46');</script>
+    <script type="text/javascript">makeRed('example_group_46');</script>
+    <script type="text/javascript">moveProgressBar('40.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.23717s</span>
+      <div class="failure" id="failure_15">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:186:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:186:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">184</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">185</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">186</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">private_cluster_config.enable_private_nodes</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">187</span>      <span class="keyword">end</span>
+<span class="linenum">188</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_47" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_47" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_48" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_48" class="passed">network_policy.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_48');</script>
+    <script type="text/javascript">makeRed('example_group_48');</script>
+    <script type="text/javascript">moveProgressBar('42.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.25399s</span>
+      <div class="failure" id="failure_16">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:214:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:214:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">212</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">213</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">214</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">network_policy.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">215</span>      <span class="keyword">end</span>
+<span class="linenum">216</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_49" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_49" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_50" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_50" class="passed">network_policy.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_50');</script>
+    <script type="text/javascript">makeRed('example_group_50');</script>
+    <script type="text/javascript">moveProgressBar('43.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.25463s</span>
+      <div class="failure" id="failure_17">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.06-networking.rb:214:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.06-networking.rb:214:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">212</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">213</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">214</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">network_policy.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">215</span>      <span class="keyword">end</span>
+<span class="linenum">216</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_51" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_51" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_52" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_52" class="passed">master_auth.username</dt>
+    <script type="text/javascript">moveProgressBar('45.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.23841s</span></dd>
+  </dl>
+</div>
+<div id="div_group_53" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_53" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_54" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_54" class="passed">master_auth.username</dt>
+    <script type="text/javascript">moveProgressBar('46.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.23368s</span></dd>
+  </dl>
+</div>
+<div id="div_group_55" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_55" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_56" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_56" class="passed">master_auth.client_certificate</dt>
+    <script type="text/javascript">moveProgressBar('48.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.25559s</span></dd>
+  </dl>
+</div>
+<div id="div_group_57" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_57" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_58" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_58" class="passed">master_auth.client_certificate</dt>
+    <script type="text/javascript">moveProgressBar('50.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.24590s</span></dd>
+  </dl>
+</div>
+<div id="div_group_59" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_59" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_60" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_60" class="passed">legacy_abac.enabled</dt>
+    <script type="text/javascript">moveProgressBar('51.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.25334s</span></dd>
+  </dl>
+</div>
+<div id="div_group_61" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_61" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_62" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_62" class="passed">legacy_abac.enabled</dt>
+    <script type="text/javascript">moveProgressBar('53.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == nil</span><span class='duration'>0.25767s</span></dd>
+  </dl>
+</div>
+<div id="div_group_63" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_63" class="passed">[tigera-tesla] Cluster us-central1/ops-01/pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_64" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_64" class="passed">config.service_account</dt>
+    <script type="text/javascript">moveProgressBar('54.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to cmp == &quot;default&quot;</span><span class='duration'>0.25791s</span></dd>
+  </dl>
+</div>
+<div id="div_group_65" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_65" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management/default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_66" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_66" class="passed">config.service_account</dt>
+    <script type="text/javascript">makeRed('div_group_66');</script>
+    <script type="text/javascript">makeRed('example_group_66');</script>
+    <script type="text/javascript">moveProgressBar('56.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to cmp == &quot;default&quot;</span>
+      <span class="duration">0.21740s</span>
+      <div class="failure" id="failure_18">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: default
+         got: default
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.02-iam.rb:57:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.02-iam.rb:57:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">55</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>nodepoolname<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">56</span>          <span class="keyword">subject</span> { google_container_node_pool(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">cluster_name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">nodepool_name</span>: nodepoolname) }
+<span class="offending"><span class="linenum">57</span>          its(<span class="string"><span class="delimiter">'</span><span class="content">config.service_account</span><span class="delimiter">'</span></span>) { should_not cmp <span class="string"><span class="delimiter">'</span><span class="content">default</span><span class="delimiter">'</span></span> }</span>
+<span class="linenum">58</span>        <span class="keyword">end</span>
+<span class="linenum">59</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_67" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_67" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_68" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_68" class="passed">database_encryption.key_name</dt>
+    <script type="text/javascript">makeRed('div_group_68');</script>
+    <script type="text/javascript">makeRed('example_group_68');</script>
+    <script type="text/javascript">moveProgressBar('57.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to eq nil</span>
+      <span class="duration">0.23387s</span>
+      <div class="failure" id="failure_19">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: value != nil
+         got: nil
+
+    (compared using ==)
+  # inspec-gke-cis-gcp/controls/5.03-kms.rb:67:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.03-kms.rb:67:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">65</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.key_name</span><span class="delimiter">'</span></span>) { should_not eq <span class="predefined-constant">nil</span> }</span>
+<span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.state</span><span class="delimiter">'</span></span>) { should cmp <span class="string"><span class="delimiter">'</span><span class="content">ENCRYPTED</span><span class="delimiter">'</span></span> }
+<span class="linenum">69</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_69" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_69" class="passed">database_encryption.state</dt>
+    <script type="text/javascript">makeRed('div_group_69');</script>
+    <script type="text/javascript">makeRed('example_group_69');</script>
+    <script type="text/javascript">moveProgressBar('59.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == &quot;ENCRYPTED&quot;</span>
+      <span class="duration">0.23056s</span>
+      <div class="failure" id="failure_20">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: ENCRYPTED
+         got: DECRYPTED
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.03-kms.rb:68:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.03-kms.rb:68:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.key_name</span><span class="delimiter">'</span></span>) { should_not eq <span class="predefined-constant">nil</span> }
+<span class="offending"><span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.state</span><span class="delimiter">'</span></span>) { should cmp <span class="string"><span class="delimiter">'</span><span class="content">ENCRYPTED</span><span class="delimiter">'</span></span> }</span>
+<span class="linenum">69</span>      <span class="keyword">end</span>
+<span class="linenum">70</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_70" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_70" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_71" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_71" class="passed">database_encryption.key_name</dt>
+    <script type="text/javascript">makeRed('div_group_71');</script>
+    <script type="text/javascript">makeRed('example_group_71');</script>
+    <script type="text/javascript">moveProgressBar('60.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to eq nil</span>
+      <span class="duration">0.24749s</span>
+      <div class="failure" id="failure_21">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: value != nil
+         got: nil
+
+    (compared using ==)
+  # inspec-gke-cis-gcp/controls/5.03-kms.rb:67:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.03-kms.rb:67:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">65</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.key_name</span><span class="delimiter">'</span></span>) { should_not eq <span class="predefined-constant">nil</span> }</span>
+<span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.state</span><span class="delimiter">'</span></span>) { should cmp <span class="string"><span class="delimiter">'</span><span class="content">ENCRYPTED</span><span class="delimiter">'</span></span> }
+<span class="linenum">69</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_72" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_72" class="passed">database_encryption.state</dt>
+    <script type="text/javascript">makeRed('div_group_72');</script>
+    <script type="text/javascript">makeRed('example_group_72');</script>
+    <script type="text/javascript">moveProgressBar('62.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == &quot;ENCRYPTED&quot;</span>
+      <span class="duration">0.25650s</span>
+      <div class="failure" id="failure_22">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: ENCRYPTED
+         got: DECRYPTED
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.03-kms.rb:68:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.03-kms.rb:68:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">66</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="linenum">67</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.key_name</span><span class="delimiter">'</span></span>) { should_not eq <span class="predefined-constant">nil</span> }
+<span class="offending"><span class="linenum">68</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">database_encryption.state</span><span class="delimiter">'</span></span>) { should cmp <span class="string"><span class="delimiter">'</span><span class="content">ENCRYPTED</span><span class="delimiter">'</span></span> }</span>
+<span class="linenum">69</span>      <span class="keyword">end</span>
+<span class="linenum">70</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_73" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_73" class="passed">[tigera-tesla]</dt>
+  </dl>
+</div>
+<div id="div_group_74" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_74" class="passed">state</dt>
+    <script type="text/javascript">makeRed('div_group_74');</script>
+    <script type="text/javascript">makeRed('example_group_74');</script>
+    <script type="text/javascript">moveProgressBar('64.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == &quot;ENABLED&quot;</span>
+      <span class="duration">0.23723s</span>
+      <div class="failure" id="failure_23">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: ENABLED
+         got: DISABLED
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:62:in `block (3 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:62:in `block (3 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">60</span>    <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">]</span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">61</span>      <span class="keyword">subject</span> { google_project_service(<span class="key">project</span>: gcp_project_id, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">containerscanning.googleapis.com</span><span class="delimiter">'</span></span>) }
+<span class="offending"><span class="linenum">62</span>      its(<span class="string"><span class="delimiter">'</span><span class="content">state</span><span class="delimiter">'</span></span>) { should cmp <span class="string"><span class="delimiter">'</span><span class="content">ENABLED</span><span class="delimiter">'</span></span> }</span>
+<span class="linenum">63</span>    <span class="keyword">end</span>
+<span class="linenum">64</span>  <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_75" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_75" class="passed">[tigera-tesla] Members for roles/storage.admin in Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+    <script type="text/javascript">makeRed('div_group_75');</script>
+    <script type="text/javascript">makeRed('example_group_75');</script>
+    <script type="text/javascript">moveProgressBar('65.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">match the allow list</span>
+      <span class="duration">0.16711s</span>
+      <div class="failure" id="failure_24">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: [&quot;projectEditor:tigera-tesla&quot;, &quot;projectOwner:tigera-tesla&quot;, &quot;serviceAccount:registry-write@tigera-tesla.iam.gserviceaccount.com&quot;, &quot;serviceAccount:registry-writer@tigera-tesla.iam.gserviceaccount.com&quot;]
+         got: [&quot;projectEditor:tigera-tesla&quot;, &quot;projectOwner:tigera-tesla&quot;]
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:116:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:116:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">114</span>        <span class="keyword">subject</span> { google_storage_bucket_iam_binding(<span class="key">bucket</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">artifacts.</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">.appspot.com</span><span class="delimiter">&quot;</span></span>, <span class="key">role</span>: iam_policy.role) }
+<span class="linenum">115</span>        <span class="keyword">it</span> <span class="string"><span class="delimiter">'</span><span class="content">match the allow list</span><span class="delimiter">'</span></span> <span class="keyword">do</span>
+<span class="offending"><span class="linenum">116</span>          <span class="keyword">expect</span>(<span class="keyword">subject</span>.members).to cmp(role_member_list)</span>
+<span class="linenum">117</span>        <span class="keyword">end</span>
+<span class="linenum">118</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_76" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_76" class="passed">[tigera-tesla] IAM Binding of role roles/storage.admin on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+  </dl>
+</div>
+<div id="div_group_77" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_77" class="passed">members</dt>
+    <script type="text/javascript">moveProgressBar('67.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to include &quot;serviceAccount:operations@tigera-tesla.iam.gserviceaccount.com&quot;</span><span class='duration'>0.19423s</span></dd>
+  </dl>
+</div>
+<div id="div_group_78" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_78" class="passed">[tigera-tesla] IAM Binding of role roles/storage.legacyBucketReader on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+  </dl>
+</div>
+<div id="div_group_79" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_79" class="passed">members</dt>
+    <script type="text/javascript">moveProgressBar('68.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to include &quot;serviceAccount:operations@tigera-tesla.iam.gserviceaccount.com&quot;</span><span class='duration'>0.19886s</span></dd>
+  </dl>
+</div>
+<div id="div_group_80" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_80" class="passed">[tigera-tesla] IAM Binding of role roles/storage.objectViewer on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+    <script type="text/javascript">makeRed('div_group_80');</script>
+    <script type="text/javascript">makeRed('example_group_80');</script>
+    <script type="text/javascript">moveProgressBar('70.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to exist</span>
+      <span class="duration">0.00227s</span>
+      <div class="failure" id="failure_25">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected Bucket IamBinding artifacts.tigera-tesla.appspot.com Role: roles/storage.objectViewer to exist
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:172:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:172:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">170</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] IAM Binding of role roles/storage.objectViewer on Storage Bucket artifacts.</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">.appspot.com</span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">171</span>          <span class="keyword">subject</span> { iam_binding_object_viewer }
+<span class="offending"><span class="linenum">172</span>          <span class="keyword">it</span> { should exist }</span>
+<span class="linenum">173</span>        <span class="keyword">end</span>
+<span class="linenum">174</span>        <span class="keyword">next</span> <span class="keyword">if</span> iam_binding_object_viewer.members.nil?</code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_81" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_81" class="passed">[tigera-tesla] IAM Binding of role roles/storage.admin on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+  </dl>
+</div>
+<div id="div_group_82" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_82" class="passed">members</dt>
+    <script type="text/javascript">moveProgressBar('71.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to include &quot;serviceAccount:default&quot;</span><span class='duration'>0.19111s</span></dd>
+  </dl>
+</div>
+<div id="div_group_83" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_83" class="passed">[tigera-tesla] IAM Binding of role roles/storage.legacyBucketReader on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+  </dl>
+</div>
+<div id="div_group_84" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_84" class="passed">members</dt>
+    <script type="text/javascript">moveProgressBar('73.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to include &quot;serviceAccount:default&quot;</span><span class='duration'>0.19960s</span></dd>
+  </dl>
+</div>
+<div id="div_group_85" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_85" class="passed">[tigera-tesla] IAM Binding of role roles/storage.objectViewer on Storage Bucket artifacts.tigera-tesla.appspot.com</dt>
+    <script type="text/javascript">makeRed('div_group_85');</script>
+    <script type="text/javascript">makeRed('example_group_85');</script>
+    <script type="text/javascript">moveProgressBar('75.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to exist</span>
+      <span class="duration">0.00048s</span>
+      <div class="failure" id="failure_26">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected Bucket IamBinding artifacts.tigera-tesla.appspot.com Role: roles/storage.objectViewer to exist
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:172:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:172:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">170</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] IAM Binding of role roles/storage.objectViewer on Storage Bucket artifacts.</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">.appspot.com</span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">171</span>          <span class="keyword">subject</span> { iam_binding_object_viewer }
+<span class="offending"><span class="linenum">172</span>          <span class="keyword">it</span> { should exist }</span>
+<span class="linenum">173</span>        <span class="keyword">end</span>
+<span class="linenum">174</span>        <span class="keyword">next</span> <span class="keyword">if</span> iam_binding_object_viewer.members.nil?</code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_86" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_86" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_87" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_87" class="passed">binary_authorization.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_87');</script>
+    <script type="text/javascript">makeRed('example_group_87');</script>
+    <script type="text/javascript">moveProgressBar('76.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.23684s</span>
+      <div class="failure" id="failure_27">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:209:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:209:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">207</span>    <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">208</span>      <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">209</span>      its(<span class="string"><span class="delimiter">'</span><span class="content">binary_authorization.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">210</span>      <span class="comment"># TODO: Implement check for &quot;Allow all policy&quot; (currently no method available with inspec-gcp)</span>
+<span class="linenum">211</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_88" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_88" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_89" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_89" class="passed">binary_authorization.enabled</dt>
+    <script type="text/javascript">makeRed('div_group_89');</script>
+    <script type="text/javascript">makeRed('example_group_89');</script>
+    <script type="text/javascript">moveProgressBar('78.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.24625s</span>
+      <div class="failure" id="failure_28">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.01-container-registry.rb:209:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.01-container-registry.rb:209:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">207</span>    <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">208</span>      <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">209</span>      its(<span class="string"><span class="delimiter">'</span><span class="content">binary_authorization.enabled</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">210</span>      <span class="comment"># TODO: Implement check for &quot;Allow all policy&quot; (currently no method available with inspec-gcp)</span>
+<span class="linenum">211</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_90" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_90" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_91" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_91" class="passed">config.image_type</dt>
+    <script type="text/javascript">moveProgressBar('79.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to match /COS/</span><span class='duration'>0.22941s</span></dd>
+  </dl>
+</div>
+<div id="div_group_92" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_92" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_93" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_93" class="passed">config.image_type</dt>
+    <script type="text/javascript">moveProgressBar('81.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to match /COS/</span><span class='duration'>0.23898s</span></dd>
+  </dl>
+</div>
+<div id="div_group_94" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_94" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_95" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_95" class="passed">management.auto_repair</dt>
+    <script type="text/javascript">moveProgressBar('82.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.21833s</span></dd>
+  </dl>
+</div>
+<div id="div_group_96" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_96" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_97" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_97" class="passed">management.auto_repair</dt>
+    <script type="text/javascript">moveProgressBar('84.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.21627s</span></dd>
+  </dl>
+</div>
+<div id="div_group_98" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_98" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_99" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_99" class="passed">management.auto_upgrade</dt>
+    <script type="text/javascript">moveProgressBar('85.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.23256s</span></dd>
+  </dl>
+</div>
+<div id="div_group_100" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_100" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_101" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_101" class="passed">management.auto_upgrade</dt>
+    <script type="text/javascript">moveProgressBar('87.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.23458s</span></dd>
+  </dl>
+</div>
+<div id="div_group_102" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_102" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_103" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_103" class="passed">release_channel.channel</dt>
+    <script type="text/javascript">makeRed('div_group_103');</script>
+    <script type="text/javascript">makeRed('example_group_103');</script>
+    <script type="text/javascript">moveProgressBar('89.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to be in &quot;STABLE&quot; and &quot;REGULAR&quot;</span>
+      <span class="duration">0.24725s</span>
+      <div class="failure" id="failure_29">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected `` to be in the list: `[&quot;STABLE&quot;, &quot;REGULAR&quot;]`
+  # inspec-gke-cis-gcp/controls/5.05-nodes.rb:168:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.05-nodes.rb:168:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">166</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">167</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">168</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">release_channel.channel</span><span class="delimiter">'</span></span>) { should be_in <span class="string"><span class="delimiter">%w[</span><span class="content">STABLE REGULAR</span><span class="delimiter">]</span></span> }</span>
+<span class="linenum">169</span>      <span class="keyword">end</span>
+<span class="linenum">170</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_104" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_104" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_105" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_105" class="passed">release_channel.channel</dt>
+    <script type="text/javascript">makeRed('div_group_105');</script>
+    <script type="text/javascript">makeRed('example_group_105');</script>
+    <script type="text/javascript">moveProgressBar('90.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to be in &quot;STABLE&quot; and &quot;REGULAR&quot;</span>
+      <span class="duration">0.24171s</span>
+      <div class="failure" id="failure_30">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+    expected `` to be in the list: `[&quot;STABLE&quot;, &quot;REGULAR&quot;]`
+  # inspec-gke-cis-gcp/controls/5.05-nodes.rb:168:in `block (4 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.05-nodes.rb:168:in `block (4 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">166</span>      <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">167</span>        <span class="keyword">subject</span> { google_container_cluster(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">name</span>: gke_cluster[<span class="symbol">:cluster_name</span>]) }
+<span class="offending"><span class="linenum">168</span>        its(<span class="string"><span class="delimiter">'</span><span class="content">release_channel.channel</span><span class="delimiter">'</span></span>) { should be_in <span class="string"><span class="delimiter">%w[</span><span class="content">STABLE REGULAR</span><span class="delimiter">]</span></span> }</span>
+<span class="linenum">169</span>      <span class="keyword">end</span>
+<span class="linenum">170</span>    <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_106" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_106" class="passed">[tigera-tesla] Cluster us-central1/ops-01</dt>
+  </dl>
+</div>
+<div id="div_group_107" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_107" class="passed">shielded_nodes.enabled</dt>
+    <script type="text/javascript">moveProgressBar('92.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.09814s</span></dd>
+  </dl>
+</div>
+<div id="div_group_108" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_108" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management</dt>
+  </dl>
+</div>
+<div id="div_group_109" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_109" class="passed">shielded_nodes.enabled</dt>
+    <script type="text/javascript">moveProgressBar('93.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.23894s</span></dd>
+  </dl>
+</div>
+<div id="div_group_110" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_110" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_111" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_111" class="passed">config.shielded_instance_config.enable_integrity_monitoring</dt>
+    <script type="text/javascript">moveProgressBar('95.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.23861s</span></dd>
+  </dl>
+</div>
+<div id="div_group_112" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_112" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_113" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_113" class="passed">config.shielded_instance_config.enable_integrity_monitoring</dt>
+    <script type="text/javascript">moveProgressBar('96.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.24907s</span></dd>
+  </dl>
+</div>
+<div id="div_group_114" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_114" class="passed">[tigera-tesla] Cluster us-central1/ops-01, Node Pool: pool-2</dt>
+  </dl>
+</div>
+<div id="div_group_115" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_115" class="passed">config.shielded_instance_config.enable_secure_boot</dt>
+    <script type="text/javascript">moveProgressBar('98.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to cmp == true</span><span class='duration'>0.24020s</span></dd>
+  </dl>
+</div>
+<div id="div_group_116" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_116" class="passed">[tigera-tesla] Cluster us-central1/ykuziwxr-management, Node Pool: default-pool</dt>
+  </dl>
+</div>
+<div id="div_group_117" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_117" class="passed">config.shielded_instance_config.enable_secure_boot</dt>
+    <script type="text/javascript">makeRed('div_group_117');</script>
+    <script type="text/javascript">makeRed('example_group_117');</script>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == true</span>
+      <span class="duration">0.25256s</span>
+      <div class="failure" id="failure_31">
+        <div class="message"><pre>  Failure/Error: [0m[1;34;4mDEFAULT_FAILURE_NOTIFIER[0m = lambda { |failure, _opts| raise failure }
+
+    expected: true
+         got: 
+
+    (compared using `cmp` matcher)
+  # inspec-gke-cis-gcp/controls/5.05-nodes.rb:267:in `block (5 levels) in load_with_context&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+  # /home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+        <div class="backtrace"><pre>inspec-gke-cis-gcp/controls/5.05-nodes.rb:267:in `block (5 levels) in load_with_context&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner_rspec.rb:97:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:183:in `run_tests&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/runner.rb:154:in `run&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/cli.rb:366:in `exec&#39;
+/home/anthony_tam/.gems/gems/inspec-core-5.18.14/lib/inspec/base_cli.rb:35:in `start&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">265</span>        <span class="keyword">describe</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">[</span><span class="inline"><span class="inline-delimiter">#{</span>gcp_project_id<span class="inline-delimiter">}</span></span><span class="content">] Cluster </span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:location</span>]<span class="inline-delimiter">}</span></span><span class="content">/</span><span class="inline"><span class="inline-delimiter">#{</span>gke_cluster[<span class="symbol">:cluster_name</span>]<span class="inline-delimiter">}</span></span><span class="content">, Node Pool: </span><span class="inline"><span class="inline-delimiter">#{</span>nodepoolname<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span> <span class="keyword">do</span>
+<span class="linenum">266</span>          <span class="keyword">subject</span> { google_container_node_pool(<span class="key">project</span>: gcp_project_id, <span class="key">location</span>: gke_cluster[<span class="symbol">:location</span>], <span class="key">cluster_name</span>: gke_cluster[<span class="symbol">:cluster_name</span>], <span class="key">nodepool_name</span>: nodepoolname) }
+<span class="offending"><span class="linenum">267</span>          its(<span class="string"><span class="delimiter">'</span><span class="content">config.shielded_instance_config.enable_secure_boot</span><span class="delimiter">'</span></span>) { should cmp <span class="predefined-constant">true</span> }</span>
+<span class="linenum">268</span>        <span class="keyword">end</span>
+<span class="linenum">269</span>      <span class="keyword">end</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>14.60839 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "64 examples, 31 failures";</script>
+</div>
+</div>
+</body>
+</html>
